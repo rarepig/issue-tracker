@@ -22,13 +22,15 @@ while (!exit)
     Console.WriteLine("1. Create Issue");
     Console.WriteLine("2. View All Issues");
     Console.WriteLine("3. Save Issues");
-    Console.WriteLine("4. Exit\n");
+    Console.WriteLine("4. Exit");
+    Console.WriteLine();
     Console.Write("Select an option: ");
 
     switch (Console.ReadLine())
     {
         case "1":
-            Console.WriteLine("\n----Create Issue----");
+            Console.WriteLine();
+            Console.WriteLine("----Create Issue----");
 
             string issueTitle;
             while (true)
@@ -40,13 +42,15 @@ while (!exit)
                 {
                     break;
                 }
-                Console.WriteLine("Title is required.\n");
+                Console.WriteLine();
+                Console.WriteLine("Title is required.");
             }
             Console.Write("Enter issue description: ");
             string issueDescription = Console.ReadLine() ?? "";
             Console.Write("Enter person in charge: ");
             string personInCharge = Console.ReadLine() ?? "";
-            Console.Write("\nAdd exactly as entered (Y/N):");
+            Console.WriteLine();
+            Console.Write("Add exactly as entered (Y/N): ");
 
             switch (Console.ReadLine())
             {
@@ -62,24 +66,33 @@ while (!exit)
                     data.NextIssueId++;
                     data.Issues.Add(newIssue);
 
-                    Console.WriteLine("\nIssue has been added.\n");
+                    Console.WriteLine();
+                    Console.WriteLine("Issue has been added.");
+                    Console.WriteLine();
                     break;
                 default:
-                    Console.WriteLine("\nIssue creation has been canceled.\n");
+                    Console.WriteLine();
+                    Console.WriteLine("Issue creation has been canceled.");
+                    Console.WriteLine();
                     break;
             }
+            Console.WriteLine("Press Enter to return to the main menu.");
+            Console.ReadLine();
             break;
 
         case "2":
-            Console.WriteLine("\n----Issues----");
+            Console.WriteLine();
+            Console.WriteLine("----Issues----");
             foreach (Issue issue in data.Issues)
             {
                 Console.WriteLine($"# {issue.IssueId}: {issue.Title}");
             }
+            Console.WriteLine();
             Console.WriteLine(
                 data.Issues.Count == 1
-                    ? "\n1 issue found.\n"
-                    : $"\n{data.Issues.Count} issues found.\n");
+                    ? "1 issue found."
+                    : $"{data.Issues.Count} issues found.");
+            Console.WriteLine();
             while (true)
             {
                 Console.Write("Select ID for detail('Q' to go back): ");
@@ -91,18 +104,23 @@ while (!exit)
                     {
                         if (issue.IssueId == selectedIssueId)
                         {
-                            Console.WriteLine("\nAbout Issue # " + issue.IssueId);
+                            Console.WriteLine();
+                            Console.WriteLine("About Issue # " + issue.IssueId);
                             Console.WriteLine("------------------------------");
                             Console.WriteLine("Title: " + issue.Title);
                             Console.WriteLine("Assignee: " + issue.PersonInCharge);
-                            Console.WriteLine("Description: \n" + issue.Description + "\n");
+                            Console.WriteLine("Description:");
+                            Console.WriteLine(issue.Description);
+                            Console.WriteLine();
                             issueFound = true;
                             break;
                         }
                     }
                     if (!issueFound)
                     {
-                        Console.WriteLine($"\nIssue # {selectedIssueId} not found.\n");
+                        Console.WriteLine();
+                        Console.WriteLine($"Issue # {selectedIssueId} not found.");
+                        Console.WriteLine();
                     }
                     break;
                 }
@@ -115,10 +133,13 @@ while (!exit)
                     }
                     else
                     {
-                        Console.WriteLine("Please enter a valid number.\n");
+                        Console.WriteLine();
+                        Console.WriteLine("Please enter a valid number.");
                     }
                 }
             }
+            Console.WriteLine("Press Enter to return to the main menu.");
+            Console.ReadLine();
             break;
 
         case "3":
@@ -127,7 +148,11 @@ while (!exit)
                 WriteIndented = true
             });
             File.WriteAllText(filePath, updatedJson);
-            Console.WriteLine("\nIssues saved successfully.\n");
+            Console.WriteLine();
+            Console.WriteLine("Issues saved successfully.");
+            Console.WriteLine();
+            Console.WriteLine("Press Enter to return to the main menu.");
+            Console.ReadLine();
             break;
 
         case "4":
@@ -135,7 +160,9 @@ while (!exit)
             break;
 
         default:
-            Console.WriteLine($"\nPlease enter a valid number.\n");
+            Console.WriteLine();
+            Console.WriteLine("Please enter a valid number.");
+            Console.WriteLine();
             break;
     }
 }
