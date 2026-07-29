@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 
 string filePath = "Issues.json";
+bool exit = false;
 
 IssueTrackerData data;
 
@@ -15,7 +16,7 @@ else
     data = new IssueTrackerData();
 }
 
-while (true)
+while (!exit)
 {
     Console.WriteLine("=====Issue Tracker=====");
     Console.WriteLine("1. Create Issue");
@@ -76,8 +77,8 @@ while (true)
                 Console.WriteLine($"# {issue.IssueId}: {issue.Title}");
             }
             Console.WriteLine(
-                data.Issues.Count <= 1
-                    ? $"\n{data.Issues.Count} issue found.\n"
+                data.Issues.Count == 1
+                    ? "\n1 issue found.\n"
                     : $"\n{data.Issues.Count} issues found.\n");
             while (true)
             {
@@ -120,12 +121,17 @@ while (true)
             }
             break;
 
-        case "3":            
-            Console.WriteLine($"\nSaving\n");
+        case "3":
+            string updatedJson = JsonSerializer.Serialize(data, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+            File.WriteAllText(filePath, updatedJson);
+            Console.WriteLine("\nIssues saved successfully.\n");
             break;
 
         case "4":
-            Console.WriteLine($"\nBye bye.\n");
+            exit = true;
             break;
 
         default:
