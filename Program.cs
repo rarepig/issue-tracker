@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.Metrics;
+using System.Text.Json;
 
 string filePath = "Issues.json";
 
@@ -37,14 +38,14 @@ while (true)
             string issueTitle;
             while (true)
             {
-                Console.Write("Enter issue title:");
+                Console.Write("Enter issue title: ");
                 issueTitle = Console.ReadLine() ?? "";
 
                 if (!string.IsNullOrWhiteSpace(issueTitle))
                 {
                     break;
                 }
-                Console.WriteLine("Title is required.");
+                Console.WriteLine("Title is required.\n");
             }
             Console.Write("Enter issue description: ");
             string issueDescription = Console.ReadLine() ?? "";
@@ -76,6 +77,53 @@ while (true)
 
         case "2":
             Console.WriteLine("\n----Issues----");
+            foreach (Issue issue in issues)
+            {
+                Console.WriteLine($"# {issue.IssueId}: {issue.Title}");
+            }
+            Console.WriteLine(
+                issues.Count <= 1
+                    ? $"\n{issues.Count} issue found.\n"
+                    : $"\n{issues.Count} issues found.\n");
+            while (true)
+            {
+                Console.Write("Select ID for detail('Q' to go back): ");
+                string? input = Console.ReadLine();
+                if (int.TryParse(input, out int selectedIssueId) && selectedIssueId > 0)
+                {
+                    bool issueFound = false;
+                    foreach (Issue issue in issues)
+                    {
+                        if (issue.IssueId == selectedIssueId)
+                        {
+                            Console.WriteLine("\nAbout Issue # " + issue.IssueId);
+                            Console.WriteLine("------------------------------");
+                            Console.WriteLine("Title: " + issue.Title);
+                            Console.WriteLine("Assignee: " + issue.PersonInCharge);
+                            Console.WriteLine("Description: \n" + issue.Description + "\n");
+                            issueFound = true;
+                            break;
+                        }
+                    }
+                    if (!issueFound)
+                    {
+                        Console.WriteLine($"\nIssue # {selectedIssueId} not found.\n");
+                    }
+                    break;
+                }
+                else
+                {
+                    if (input == "Q" || input == "q")
+                    {
+                        Console.WriteLine();
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please enter a valid number.\n");
+                    }
+                }
+            }
             break;
 
         case "3":
@@ -87,7 +135,7 @@ while (true)
             break;
 
         default:
-            Console.WriteLine($"\nYou put the wrong number.\n");
+            Console.WriteLine($"\nPlease enter a valid number.\n");
             break;
     }
 }
