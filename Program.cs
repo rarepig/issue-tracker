@@ -2,18 +2,23 @@
 
 string filePath = "Issues.json";
 
+IssueTrackerData data;
+int nextIssueId;
 List<Issue> issues;
 
 if (File.Exists(filePath))
 {
     string existingJson = File.ReadAllText(filePath);
-    issues = JsonSerializer.Deserialize<List<Issue>>(existingJson)
-        ?? new List<Issue>();
+    data = JsonSerializer.Deserialize<IssueTrackerData>(existingJson)
+        ?? new IssueTrackerData();
 }
 else
 {
-    issues = new List<Issue>();
+    data = new IssueTrackerData();
 }
+
+nextIssueId = data.NextIssueId;
+issues = data.Issues;
 
 while (true)
 {
@@ -52,12 +57,13 @@ while (true)
                 case "Y" or "y":
                     Issue newIssue = new Issue
                     {
-                        IssueId = issues.Count + 1,
+                        IssueId = nextIssueId,
                         Title = issueTitle,
                         Description = issueDescription,
                         PersonInCharge = personInCharge
                     };
 
+                    nextIssueId++;
                     issues.Add(newIssue);
 
                     Console.WriteLine("\nIssue has been added.\n");
@@ -84,6 +90,12 @@ while (true)
             Console.WriteLine($"\nYou put the wrong number.\n");
             break;
     }
+}
+
+class IssueTrackerData
+{
+    public int NextIssueId { get; set; } = 1;
+    public List<Issue> Issues { get; set; } = new List<Issue>();
 }
 
 class Issue
