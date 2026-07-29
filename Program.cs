@@ -1,11 +1,8 @@
-﻿using System.Diagnostics.Metrics;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 string filePath = "Issues.json";
 
 IssueTrackerData data;
-int nextIssueId;
-List<Issue> issues;
 
 if (File.Exists(filePath))
 {
@@ -17,9 +14,6 @@ else
 {
     data = new IssueTrackerData();
 }
-
-nextIssueId = data.NextIssueId;
-issues = data.Issues;
 
 while (true)
 {
@@ -58,14 +52,14 @@ while (true)
                 case "Y" or "y":
                     Issue newIssue = new Issue
                     {
-                        IssueId = nextIssueId,
+                        IssueId = data.NextIssueId,
                         Title = issueTitle,
                         Description = issueDescription,
                         PersonInCharge = personInCharge
                     };
 
-                    nextIssueId++;
-                    issues.Add(newIssue);
+                    data.NextIssueId++;
+                    data.Issues.Add(newIssue);
 
                     Console.WriteLine("\nIssue has been added.\n");
                     break;
@@ -77,14 +71,14 @@ while (true)
 
         case "2":
             Console.WriteLine("\n----Issues----");
-            foreach (Issue issue in issues)
+            foreach (Issue issue in data.Issues)
             {
                 Console.WriteLine($"# {issue.IssueId}: {issue.Title}");
             }
             Console.WriteLine(
-                issues.Count <= 1
-                    ? $"\n{issues.Count} issue found.\n"
-                    : $"\n{issues.Count} issues found.\n");
+                data.Issues.Count <= 1
+                    ? $"\n{data.Issues.Count} issue found.\n"
+                    : $"\n{data.Issues.Count} issues found.\n");
             while (true)
             {
                 Console.Write("Select ID for detail('Q' to go back): ");
@@ -92,7 +86,7 @@ while (true)
                 if (int.TryParse(input, out int selectedIssueId) && selectedIssueId > 0)
                 {
                     bool issueFound = false;
-                    foreach (Issue issue in issues)
+                    foreach (Issue issue in data.Issues)
                     {
                         if (issue.IssueId == selectedIssueId)
                         {
@@ -126,7 +120,7 @@ while (true)
             }
             break;
 
-        case "3":
+        case "3":            
             Console.WriteLine($"\nSaving\n");
             break;
 
